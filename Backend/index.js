@@ -4,17 +4,20 @@ const { YoutubeTranscript } = require('youtube-transcript');
 const cors = require('cors');
 const he = require('he'); // To decode HTML entities
 const axios = require('axios');
+require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// Access environment variables
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const OPENROUTER_API_URL = process.env.OPENROUTER_API_URL;
 
-// Replace with your OpenRouter API key
-const OPENROUTER_API_KEY = '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';  // Replace with your actual OpenRouter API Key
-
-// OpenRouter API endpoint
-const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+if (!OPENROUTER_API_KEY || !OPENROUTER_API_URL) {
+  console.error('ERROR: Missing environment variables. Check your .env file.');
+  process.exit(1);
+}
 
 // Function to extract video ID
 function extractVideoId(url) {
